@@ -35,4 +35,8 @@ public class Node<T extends Comparable<T>> { //重新设置Bounds 运行时T会�
     this.data = data;
     this.next = next;
   }
+
+  public Node(T data) {
+    this.data = data;
+  }
 }

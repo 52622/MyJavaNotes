@@ -4,7 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/01_basic.iml" filepath="$PROJECT_DIR$/01_basic.iml" />
       <module fileurl="file://$PROJECT_DIR$/fanxing/fanxing.iml" filepath="$PROJECT_DIR$/fanxing/fanxing.iml" />
-      <module fileurl="file://$PROJECT_DIR$/overLoad/overLoad.iml" filepath="$PROJECT_DIR$/overLoad/overLoad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/overload/overload.iml" filepath="$PROJECT_DIR$/overload/overload.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zhujie/zhujie.iml" filepath="$PROJECT_DIR$/zhujie/zhujie.iml" />
     </modules>
   </component>
 </project>
