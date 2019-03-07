@@ -2,33 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca72829a-97b0-4d63-bc7b-9ae80ce9481c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../testControlMultiAccess/src/main/java/com/example/testcontrolmultilink/demo/MultiAccess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../02_basic/01_basic/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../02_basic/01_basic/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../02_basic/01_basic/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic/fanxing/src/FanXinCaChu/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/../02_basic/01_basic/fanxing/src/FanXinCaChu/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/01_basic/fanxing/src/FanXinCaChu/Problems.java" beforeDir="false" afterPath="$PROJECT_DIR$/../02_basic/01_basic/fanxing/src/FanXinCaChu/Problems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/包装类型缓存.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/Genric_SSE.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/Apple.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/Fruit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/Orange.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/SelfEmployed.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/Sellers.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/domain/Strawberry.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/test/Foo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/test/Test2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/Genric_SSE/src/com/genric/test/TestGenric.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../02_basic/泛型/泛型笔记.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,13 +14,18 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/myCollections/src/ArrayListSource.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="637">
-              <caret line="65" column="32" lean-forward="true" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="32" />
+              <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/myCollections/src/assets/1551852813122.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -147,7 +127,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551864006783" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551864570516" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -183,24 +163,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1551837073344</updated>
-      <workItem from="1551837076045" duration="5587000" />
+      <workItem from="1551837076045" duration="5891000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5587000" />
+    <option name="totallyTimeSpent" value="5891000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Image Layers" order="0" />
       <window_info id="Designer" order="1" />
       <window_info id="UI Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="5" weight="0.14765458" />
-      <window_info active="true" id="Structure" order="6" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.14765458" />
+      <window_info id="Structure" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Version Control" />
@@ -344,9 +323,12 @@
     <entry file="file://$PROJECT_DIR$/myCollections/src/ArrayListSource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="637">
-          <caret line="65" column="32" lean-forward="true" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="32" />
+          <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myCollections/src/assets/1551852813122.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
   </component>
 </project>
