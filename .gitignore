@@ -25,3 +25,5 @@ hs_err_pid*
 101_planAndBooks/
 100_学习总结/
 99_work/
+.idea/
+*.iml
