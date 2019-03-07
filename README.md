@@ -1,4 +1,4 @@
-# MyNotes
+# MyJavaNotes
 笔记仓库
 
 

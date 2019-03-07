@@ -1,3 +1,7 @@
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 /**
  * Copyright (C), 2015-2019, XXX有限公司
  * FileName: ArrayListSource
@@ -68,4 +72,26 @@ public class ArrayListSource {
    Object dest, int destPos,
    int length);
   */
+  // eg3 Fail-Fast modCount记录结构发生变化
+  // 添加或者删除至少一个元素的所有操作，或者是调整内部数组的大小，仅仅只是设置元素的值不算结构发生变化
+  // 序列化或者迭代 ConcurrentModificationException
+  // writeObject
+  // forEach
+
+
+  // eg4 序列化
+  // 保存元素的数组不一定都会被使用，那么就没必要全部进行序列化 保存元素的数组 elementData 使用 transient 修饰
+  // 序列化时需要使用 ObjectOutputStream 的 writeObject() 将对象转换为字节流并输出
+  // 反序列化使用的是 ObjectInputStream 的 readObject() 方法
+  /**
+  ArrayList list = new ArrayList();
+  ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+  oos.writeObject(list);
+   */
+
+  // eg5 线程安全的List
+  /**
+   * List<String> list = new ArrayList<>();
+   * List<String> synList = Collections.synchronizedList(list);
+   */
 }
