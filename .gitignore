@@ -27,3 +27,4 @@ hs_err_pid*
 99_work/
 .idea/
 *.iml
+/04_Java/06_collections/.idea/
