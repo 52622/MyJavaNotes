@@ -29,3 +29,4 @@ hs_err_pid*
 *.iml
 /04_Java/06_collections/.idea/
 /04_Java/06_collections/myCollections/myCollections.iml
+.idea/
