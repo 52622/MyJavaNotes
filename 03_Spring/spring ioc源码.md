@@ -4,7 +4,7 @@ http://www.tianxiaobo.com/2018/06/01/Spring-IOC-%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A
 
 ## 获取单例bean
 
-doGetBean()
+getBean() -> doGetBean()
 
 ```markdown
 转换 beanName
@@ -19,4 +19,12 @@ doGetBean()
 ```
 
 ![img](assets/15277442845278.jpg) 
+
+
+
+## 创建单例bean
+
+createBean(String, RootBeanDefinition,Object[])
+
+
 
