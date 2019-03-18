@@ -28,4 +28,19 @@ public class InsertionSortTest {
             System.out.println(a + ",");
         }
     }
+
+    public int[] sort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int toBeInsert = arr[i];
+            int j = i;
+            while (j>0 && toBeInsert < arr[j-1]) {
+                arr[j] = arr[j-1];
+                j--;
+            }
+
+            if(j!=i)
+                arr[j]=toBeInsert;
+        }
+        return arr;
+    }
 }
