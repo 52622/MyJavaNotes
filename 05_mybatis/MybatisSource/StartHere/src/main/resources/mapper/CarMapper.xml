@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dao.PersonDao">
+<mapper namespace="dao.CarDao">
     <resultMap id="car" type="entity.Car">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="type" column="type"/>
+        <!--自定义的枚举类型转换器-->
+        <result property="type" column="type" typeHandler="config.CarTypeHandler"/>
         <result property="price" column="price"/>
+        <!--1对1配置-->
+        <association property="person" javaType="entity.Person" resultMap="person" />
     </resultMap>
 
     <resultMap id="person" type="entity.Person">
@@ -15,25 +18,24 @@
         <result property="birthday" column="birthday"/>
         <!--EnumOrdinalTypeHandler枚举类型转换器，按照枚举定义的顺序-->
         <result property="sex" column="sex" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
-        <collection property="carList" ofType="entity.Car" resultMap="car" />
     </resultMap>
 
-    <select id="findByNameAndCreateTime" resultMap="person">
-        SELECT
-        `id`, `name`, `age`, `birthday`,`sex`
-        FROM
-        `person`
-        WHERE
-        `name` = #{name} AND `birthday` = #{birthday}
-    </select>
-
-    <select id="findOne" resultMap="person">
+    <select id="findOne" resultMap="car">
         SELECT
           p.id,p.name,p.age,p.birthday,p.sex,
           c.id as carid,c.name as carname,c.type as cartype,c.price as carprice
         FROM
           person p,car c
         WHERE
-          1=1 and p.id = c.person_id and p.id = #{id}
+          1=1 and p.id = c.person_id and c.id = #{id}
     </select>
+
+    <select id="findOneCar" resultMap="car">
+        select * from car where id=#{id}
+    </select>
+
+    <select id="findAllCar" resultMap="car">
+        select * from car
+    </select>
+
 </mapper>
