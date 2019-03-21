@@ -5,10 +5,10 @@
 <configuration>
     <properties resource="jdbc.properties"/>
 
-    <typeAliases>
-        <typeAlias alias="personalias" type="entity.Person" />
-        <typeAlias alias="caralias" type="entity.Car" />
-    </typeAliases>
+    <!--<typeAliases>-->
+        <!--<typeAlias alias="personalias" type="entity.Person" />-->
+        <!--<typeAlias alias="caralias" type="entity.Car" />-->
+    <!--</typeAliases>-->
 
     <typeHandlers>
         <typeHandler handler="config.CarTypeHandler" javaType="enums.CarTypeEnum" />

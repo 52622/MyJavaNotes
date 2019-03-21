@@ -23,7 +23,7 @@
     <select id="findOne" resultMap="car">
         SELECT
           p.id,p.name,p.age,p.birthday,p.sex,
-          c.id as carid,c.name as carname,c.type as cartype,c.price as carprice
+          c.id,c.name,c.type,c.price
         FROM
           person p,car c
         WHERE
