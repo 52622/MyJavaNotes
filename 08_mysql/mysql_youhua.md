@@ -94,7 +94,57 @@ unlocktables
    ```
 
 6. like，使用右%
-7. 
+
+7. where不要带参数，不要带计算表达式
+
+   ```sql
+   select id from t where num = @num
+   ->
+   select id from t with(index(index_for_num)) where num = @num
+   -- 强制查询使用索引
+   
+   
+   ```
+
+8. Where不要使用表达式
+
+   ```sql
+   select id from t where num/2 = 100;
+   ->
+   select id from t where num = 100*2;
+   ```
+
+9. 避免where语句中的函数操作
+
+   ```sql
+   select id from t where substring(name,1,3) = ’abc’       -–name以abc开头的id
+   select id from t where datediff(day,createdate,’2005-11-30′) = 0    -–‘2005-11-30’    --生成的id
+   
+   ->
+   
+   select id from t where name like 'abc%'
+   select id from t where createdate >= '2005-11-30' and createdate < '2005-12-1'
+   ```
+
+10. 复合索引，如果没有用到第一个字段作为条件，索引是不生效的
+
+11. 大数据量join，先分页，再join
+
+12. 不要用select count(*) from xxx;
+
+13. 一个表的索引最好不要超过6个
+
+14. 建历史表的时候，数据量大用select into，减少log，数据量小，先create table再insert
+
+15. 避免使用游标，效率低
+
+
+
+
+
+
+
+
 
 
 
