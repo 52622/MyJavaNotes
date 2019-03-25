@@ -65,15 +65,21 @@
 
 ## 博客
 
-| java成神之路 | https://www.hollischuang.com/    |              |
-| ------------ | -------------------------------- | ------------ |
-| 田小波       | http://www.tianxiaobo.com        |              |
-| 肖文杰       | https://xwjie.github.io/         |              |
-| zsh          | https://objcoding.com/           |              |
-| fangjian     | <http://fangjian0423.github.io/> |              |
-|              | <http://cmsblogs.com/>           | 死磕java系列 |
-|              | <http://www.iocoder.cn/>         | 源码分析     |
-|              | <http://www.fullstackyang.com/>  | 全栈-没啥用  |
+### 个人
+
+| java成神之路 | https://www.hollischuang.com/        |              |
+| ------------ | ------------------------------------ | ------------ |
+| 田小波       | http://www.tianxiaobo.com            |              |
+| 肖文杰       | https://xwjie.github.io/             |              |
+| zsh          | https://objcoding.com/               |              |
+| fangjian     | <http://fangjian0423.github.io/>     |              |
+|              | <http://cmsblogs.com/>               | 死磕java系列 |
+|              | <http://www.iocoder.cn/>             | 源码分析     |
+|              | https://crossoverjie.top/categories/ |              |
+
+### 团队
+
+https://tech.youzan.com/
 
 
 
