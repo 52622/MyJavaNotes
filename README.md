@@ -55,6 +55,12 @@
 
 
 
+### springcloud
+
+https://springcloud.cc/
+
+
+
 ### mybatis
 
 | MyBatis 源码分析系列 | http://www.tianxiaobo.com/categories/java-framework/mybatis/ |
@@ -65,6 +71,7 @@
 
 ## 博客
 
+
 | java成神之路 | https://www.hollischuang.com/    |              |
 | ------------ | -------------------------------- | ------------ |
 | 田小波       | http://www.tianxiaobo.com        |              |
@@ -74,6 +81,32 @@
 |              | <http://cmsblogs.com/>           | 死磕java系列 |
 |              | <http://www.iocoder.cn/>         | 源码分析     |
 |              | https://crossoverjie.top/        | Java         |
+
+### 个人
+
+| java成神之路 | https://www.hollischuang.com/        |              |
+| ------------ | ------------------------------------ | ------------ |
+| 田小波       | http://www.tianxiaobo.com            |              |
+| 肖文杰       | https://xwjie.github.io/             |              |
+| zsh          | https://objcoding.com/               |              |
+| fangjian     | <http://fangjian0423.github.io/>     |              |
+|              | <http://cmsblogs.com/>               | 死磕java系列 |
+|              | <http://www.iocoder.cn/>             | 源码分析     |
+|              | https://crossoverjie.top/categories/ |              |
+
+### 团队
+
+有赞
+
+https://tech.youzan.com/
+
+美团点评
+
+https://tech.meituan.com/
+
+阿里中间件
+
+http://jm.taobao.org/
 
 
 
