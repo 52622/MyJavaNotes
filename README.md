@@ -73,7 +73,7 @@
 | fangjian     | <http://fangjian0423.github.io/> |              |
 |              | <http://cmsblogs.com/>           | 死磕java系列 |
 |              | <http://www.iocoder.cn/>         | 源码分析     |
-|              | <http://www.fullstackyang.com/>  | 全栈-没啥用  |
+|              | https://crossoverjie.top/        | Java         |
 
 
 
