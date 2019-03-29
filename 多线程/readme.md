@@ -819,7 +819,88 @@ concurrent包
 
 ![concurrentåå®ç°æ´ä½ç¤ºæå¾.png](assets/163260cff7cb847c) 
 
+### Lock
 
+**虽然它失去了像synchronize关键字隐式加锁解锁的便捷性，但是却拥有了锁获取和释放的可操作性，可中断的获取锁以及超时获取锁等多种synchronized关键字所不具备的同步特性。** 
+
+**synchronized同步块执行完成或者遇到异常是锁会自动释放，而lock必须调用unlock()方法释放锁，因此在finally块中释放锁** 
+
+```java
+Lock lock = new ReentrantLock();
+lock.lock();
+try{
+	.......
+}finally{
+	lock.unlock();
+}
+
+```
+
+API
+
+```java
+void lock(); //获取锁
+void lockInterruptibly() throws InterruptedException；//获取锁的过程能够响应中断
+boolean tryLock();//非阻塞式响应中断能立即返回，获取锁返回true反之返回fasle
+boolean tryLock(long time, TimeUnit unit) throws InterruptedException;//超时获取锁，在超时内或者未中断的情况下能够获取锁
+Condition newCondition();//获取与lock绑定的等待通知组件，当前线程必须获得了锁才能进行等待，进行等待时会先释放锁，当再次获取锁时才能从等待中返回
+```
+
+基于AbstractQueuedSynchronizer 实现
+
+
+
+### AbstractQueuedSynchronizer 
+
+AQS
+
+同步器
+
+实现主要依赖一个int成员变量来表示同步状态以及通过一个FIFO队列构成等待队列 
+
+
+
+**子类必须重写AQS的几个protected修饰的用来改变同步状态的方法**，其他方法主要是实现了排队和阻塞机制。**状态的更新使用getState,setState以及compareAndSetState这三个方法** 
+
+
+
+模板方法设计模式
+
+将**一些方法开放给子类进行重写，而同步器给同步组件所提供模板方法又会重新调用被子类所重写的方法** 
+
+
+
+Lock的实现：
+
+同步组件（这里不仅仅值锁，还包括CountDownLatch等）的实现依赖于同步器AQS，在同步组件实现中，使用AQS的方式被推荐定义继承AQS的静态内存类；
+
+AQS采用模板方法进行设计，AQS的protected修饰的方法需要由继承AQS的子类进行重写实现，当调用AQS的子类的方法时就会调用被重写的方法；
+
+AQS负责同步状态的管理，线程的排队，等待和唤醒这些底层操作，而Lock等同步组件主要专注于实现同步语义；
+
+在重写AQS的方式时，使用AQS提供的`getState(),setState(),compareAndSetState()`方法进行修改同步状态
+
+ 
+
+ AQS提供的模板方法可以分为3类：
+
+1. 独占式获取与释放同步状态；
+2. 共享式获取与释放同步状态；
+3. 查询同步队列中等待线程情况；
+
+
+
+![AQSå¯éåçæ¹æ³.png](assets/163260cff7d16b38) 
+
+
+
+![AQSæä¾çæ¨¡æ¿æ¹æ³.png](assets/163260cff87fe8bf) 
+
+
+
+
+
+ 
 
 
 
