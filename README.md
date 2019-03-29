@@ -130,7 +130,7 @@ https://github.com/crazyweeds/JVM
 
 | **<https://legacy.gitbook.com/book/coderxing/architecture-evolution/details>** | **从部落到帝国 - 后端技术栈的演进及开源实践 v 0.51** |
 | ------------------------------------------------------------ | ---------------------------------------------------- |
-|                                                              |                                                      |
+|                                                              | JAVA并发编程的艺术                                   |
 
 
 
