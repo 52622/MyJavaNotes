@@ -390,7 +390,7 @@ synchronized优化
 
 Java对象头里的Mark Word里默认的存放的对象的Hashcode,分代年龄和锁标记位 
 
-![Mark Wordå­å¨ç»æ](assets/16315cff10307a29) 
+![Mark Word](assets/16315cff10307a29) 
 
 **无锁状态、偏向锁状态、轻量级锁状态和重量级锁状态** 
 
@@ -898,135 +898,492 @@ AQS负责同步状态的管理，线程的排队，等待和唤醒这些底层�
 
 
 
+## 深入理解AbstractQueuedSynchronizer(AQS)
 
+同步队列
 
- 
+双向链表实现
 
+静态内部类
 
+Node
 
- 
+```java
+volatile int waitStatus //节点状态
+volatile Node prev //当前节点/线程的前驱节点
+volatile Node next; //当前节点/线程的后继节点
+volatile Thread thread;//加入同步队列的线程引用
+Node nextWaiter;//等待队列中的下一个节点
+```
 
- 
+节点状态
 
+```java
+int CANCELLED =  1//节点从同步队列中取消
+int SIGNAL    = -1//后继节点的线程处于等待状态，如果当前节点释放同步状态会通知后继节点，使得后继节点的线程能够运行；
+int CONDITION = -2//当前节点进入等待队列中
+int PROPAGATE = -3//表示下一次共享式同步状态获取将会无条件传播下去
+int INITIAL = 0;//初始状态
+```
 
 
 
+通过头尾指针管理同步队列
 
+![img](assets/163261637bb25796.png)
 
+1. **节点的数据结构，即AQS的静态内部类Node,节点的等待状态等信息**；
+2. **同步队列是一个双向队列，AQS通过持有头尾指针管理同步队列**；
 
+### 独占锁
+
+
+
+获取
+
+```java
+lock() -> acquire(int arg)
+```
+
+
 
+```java
+public final void acquire(int arg) {
+		//先看同步状态是否获取成功，如果成功则方法结束返回
+		//若失败则先调用addWaiter()方法再调用acquireQueued()方法
+        if (!tryAcquire(arg) &&
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+}
+```
 
 
 
+```java
+private Node addWaiter(Node mode) {
+		// 1. 将当前线程构建成Node类型
+        Node node = new Node(Thread.currentThread(), mode);
+        // Try the fast path of enq; backup to full enq on failure
+        // 2. 当前尾节点是否为null？
+		Node pred = tail;
+        if (pred != null) {
+			// 2.2 将当前节点尾插入的方式插入同步队列中
+            node.prev = pred;
+            if (compareAndSetTail(pred, node)) {
+                pred.next = node;
+                return node;
+            }
+        }
+		// 2.1. 当前同步队列尾节点为null，说明当前线程是第一个加入同步队列进行等待的线程
+        enq(node);
+        return node;
+}
 
+```
 
 
 
+enq
 
+1. **在当前线程是第一个加入同步队列时，调用compareAndSetHead(new Node())方法，完成链式队列的头结点的初始化**；
+2. **自旋不断尝试CAS尾插入节点直至成功为止**。
 
+```java
+private Node enq(final Node node) {
+        for (;;) {
+            Node t = tail;
+			if (t == null) { // Must initialize
+				//1. 构造头结点
+                if (compareAndSetHead(new Node()))
+                    tail = head;
+            } else {
+				// 2. 尾插入，CAS操作失败自旋尝试
+                node.prev = t;
+                if (compareAndSetTail(t, node)) {
+                    t.next = node;
+                    return t;
+                }
+            }
+        }
+}
 
+```
 
 
 
+acquireQueued()
 
+```java
+final boolean acquireQueued(final Node node, int arg) {
+        boolean failed = true;
+        try {
+            boolean interrupted = false;
+            for (;;) {
+				// 1. 获得当前节点的先驱节点
+                final Node p = node.predecessor();
+				// 2. 当前节点能否获取独占式锁					
+				// 2.1 如果当前节点的先驱节点是头结点并且成功获取同步状态，即可以获得独占式锁
+                if (p == head && tryAcquire(arg)) {
+					//队列头指针用指向当前节点
+                    setHead(node);
+					//释放前驱节点
+                    p.next = null; // help GC
+                    failed = false;
+                    return interrupted;
+                }
+				// 2.2 获取锁失败，线程进入等待状态等待获取独占式锁
+                if (shouldParkAfterFailedAcquire(p, node) &&
+                    parkAndCheckInterrupt())
+                    interrupted = true;
+            }
+        } finally {
+            if (failed)
+                cancelAcquire(node);
+        }
+}
 
- 
+```
 
+**如果先驱节点是头结点的并且成功获得同步状态的时候（if (p == head && tryAcquire(arg))），当前节点所指向的线程能够获取锁**。反之，获取锁失败进入等待状态。
 
+![img](assets/163261637c5fc765.png)
 
 
 
+获得锁成功，出队列
 
+![img](assets/163261637c63a47a.png)
 
 
 
+1. **如果当前节点的前驱节点是头节点，并且能够获得同步状态的话，当前线程能够获得锁该方法执行结束退出**；
+2. **获取锁失败的话，先将节点状态设置成SIGNAL，然后调用LookSupport.park方法使得当前线程阻塞**。
 
 
 
+![img](assets/163261637c891cc2.png)
 
+释放
 
+**每一次锁释放后就会唤醒队列中该节点的后继节点所引用的线程**
 
 
 
- 
+**线程获取锁失败，线程被封装成Node进行入队操作，核心方法在于addWaiter()和enq()，同时enq()完成对同步队列的头结点初始化工作以及CAS操作失败的重试**;
 
- 
+**线程获取锁是一个自旋的过程，当且仅当 当前节点的前驱节点是头结点并且成功获得同步状态时，节点出队即该节点引用的线程获得锁，否则，当不满足条件时就会调用LookSupport.park()方法使得线程阻塞**；
 
- 
+**释放锁的时候会唤醒后继节点；**
 
- 
 
 
+**在获取同步状态时，AQS维护一个同步队列，获取同步状态失败的线程会加入到队列中进行自旋；移除队列（或停止自旋）的条件是前驱节点是头结点并且成功获得了同步状态。在释放同步状态时，同步器会调用unparkSuccessor()方法唤醒后继节点。**
 
 
 
+共享锁的获取和释放
 
 
 
+## ReentrantLock
 
+**支持重入性，表示能够对共享资源能够重复加锁，即当前线程获取该锁再次获取不会被阻塞**。
 
+重入性
 
- 
+公平锁和非公平锁
 
- 
 
- 
 
- 
+1. 在线程获取锁的时候，如果已经获取锁的线程是当前线程的话则直接再次获取成功；
+2. 由于锁会被获取n次，那么只有锁在被释放同样的n次之后，该锁才算是完全释放成功
 
- 
 
- 
 
+```java
+final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    //1. 如果该锁未被任何线程占有，该锁能被当前线程获取
+	if (c == 0) {
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+    }
+	//2.若被占有，检查占有线程是否是当前线程
+    else if (current == getExclusiveOwnerThread()) {
+		// 3. 再次获取，计数加一
+        int nextc = c + acquires;
+        if (nextc < 0) // overflow
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
+    }
+    return false;
+}
 
+```
 
 
 
+```java
+protected final boolean tryRelease(int releases) {
+	//1. 同步状态减1
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+        throw new IllegalMonitorStateException();
+    boolean free = false;
+    if (c == 0) {
+		//2. 只有当同步状态为0时，锁成功被释放，返回true
+        free = true;
+        setExclusiveOwnerThread(null);
+    }
+	// 3. 锁未被完全释放，返回false
+    setState(c);
+    return free;
+}
 
+```
 
 
 
+公平锁每次获取到锁为同步队列中的第一个节点，**保证请求资源时间上的绝对顺序**，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，**造成“饥饿”现象**。
 
+公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换，而非公平锁会降低一定的上下文切换，降低性能开销。因此，ReentrantLock默认选择的是非公平锁，则是为了减少一部分上下文切换，**保证了系统更大的吞吐量**。
 
- 
 
- 
 
+## ReentrantReadWriteLoc
 
+读多写少
 
+**允许同一时刻被多个读线程访问，但是在写线程访问时，所有的读线程和其他的写线程都会被阻塞**
 
 
- 
 
- 
+写锁
 
- 
+```java
+protected final boolean tryAcquire(int acquires) {
+    /*
+     * Walkthrough:
+     * 1. If read count nonzero or write count nonzero
+     *    and owner is a different thread, fail.
+     * 2. If count would saturate, fail. (This can only
+     *    happen if count is already nonzero.)
+     * 3. Otherwise, this thread is eligible for lock if
+     *    it is either a reentrant acquire or
+     *    queue policy allows it. If so, update state
+     *    and set owner.
+     */
+    Thread current = Thread.currentThread();
+	// 1. 获取写锁当前的同步状态
+    int c = getState();
+	// 2. 获取写锁获取的次数
+    int w = exclusiveCount(c);
+    if (c != 0) {
+        // (Note: if c != 0 and w == 0 then shared count != 0)
+		// 3.1 当读锁已被读线程获取或者当前线程不是已经获取写锁的线程的话
+		// 当前线程获取写锁失败
+        if (w == 0 || current != getExclusiveOwnerThread())
+            return false;
+        if (w + exclusiveCount(acquires) > MAX_COUNT)
+            throw new Error("Maximum lock count exceeded");
+        // Reentrant acquire
+		// 3.2 当前线程获取写锁，支持可重复加锁
+        setState(c + acquires);
+        return true;
+    }
+	// 3.3 写锁未被任何线程获取，当前线程可获取写锁
+    if (writerShouldBlock() ||
+        !compareAndSetState(c, c + acquires))
+        return false;
+    setExclusiveOwnerThread(current);
+    return true;
+}
 
+```
 
+![img](assets/163262ec97ebeac9.png)
 
- 
 
 
+释放
 
+```java
+protected final boolean tryRelease(int releases) {
+    if (!isHeldExclusively())
+        throw new IllegalMonitorStateException();
+	//1. 同步状态减去写状态
+    int nextc = getState() - releases;
+	//2. 当前写状态是否为0，为0则释放写锁
+    boolean free = exclusiveCount(nextc) == 0;
+    if (free)
+        setExclusiveOwnerThread(null);
+	//3. 不为0则更新同步状态
+    setState(nextc);
+    return free;
+}
+
+```
+
+
+
+读锁
+
+获取
 
+```java
+protected final int tryAcquireShared(int unused) {
+    /*
+     * Walkthrough:
+     * 1. If write lock held by another thread, fail.
+     * 2. Otherwise, this thread is eligible for
+     *    lock wrt state, so ask if it should block
+     *    because of queue policy. If not, try
+     *    to grant by CASing state and updating count.
+     *    Note that step does not check for reentrant
+     *    acquires, which is postponed to full version
+     *    to avoid having to check hold count in
+     *    the more typical non-reentrant case.
+     * 3. If step 2 fails either because thread
+     *    apparently not eligible or CAS fails or count
+     *    saturated, chain to version with full retry loop.
+     */
+    Thread current = Thread.currentThread();
+    int c = getState();
+	//1. 如果写锁已经被获取并且获取写锁的线程不是当前线程的话，当前
+	// 线程获取读锁失败返回-1
+    if (exclusiveCount(c) != 0 &&
+        getExclusiveOwnerThread() != current)
+        return -1;
+    int r = sharedCount(c);
+    if (!readerShouldBlock() &&
+        r < MAX_COUNT &&
+		//2. 当前线程获取读锁
+        compareAndSetState(c, c + SHARED_UNIT)) {
+		//3. 下面的代码主要是新增的一些功能，比如getReadHoldCount()方法
+		//返回当前获取读锁的次数
+        if (r == 0) {
+            firstReader = current;
+            firstReaderHoldCount = 1;
+        } else if (firstReader == current) {
+            firstReaderHoldCount++;
+        } else {
+            HoldCounter rh = cachedHoldCounter;
+            if (rh == null || rh.tid != getThreadId(current))
+                cachedHoldCounter = rh = readHolds.get();
+            else if (rh.count == 0)
+                readHolds.set(rh);
+            rh.count++;
+        }
+        return 1;
+    }
+	//4. 处理在第二步中CAS操作失败的自旋已经实现重入性
+    return fullTryAcquireShared(current);
+}
 
+```
 
 
 
+释放
 
+```java
+protected final boolean tryReleaseShared(int unused) {
+    Thread current = Thread.currentThread();
+	// 前面还是为了实现getReadHoldCount等新功能
+    if (firstReader == current) {
+        // assert firstReaderHoldCount > 0;
+        if (firstReaderHoldCount == 1)
+            firstReader = null;
+        else
+            firstReaderHoldCount--;
+    } else {
+        HoldCounter rh = cachedHoldCounter;
+        if (rh == null || rh.tid != getThreadId(current))
+            rh = readHolds.get();
+        int count = rh.count;
+        if (count <= 1) {
+            readHolds.remove();
+            if (count <= 0)
+                throw unmatchedUnlockException();
+        }
+        --rh.count;
+    }
+    for (;;) {
+        int c = getState();
+		// 读锁释放 将同步状态减去读状态即可
+        int nextc = c - SHARED_UNIT;
+        if (compareAndSetState(c, nextc))
+            // Releasing the read lock has no effect on readers,
+            // but it may allow waiting writers to proceed if
+            // both read and write locks are now free.
+            return nextc == 0;
+    }
+}
 
+```
 
 
 
+锁降级
 
+读写锁支持锁降级，**遵循按照获取写锁，获取读锁再释放写锁的次序，写锁能够降级成为读锁**，不支持锁升级
 
 
 
+## Condition的await和signal等待/通知机制
 
+1. Condition能够支持不响应中断，而通过使用Object方式不支持；
+2. Condition能够支持多个等待队列（new 多个Condition对象），而Object方式只能支持一个；
+3. Condition能够支持超时时间的设置，而Object不支持
 
 
 
+1. void await() throws InterruptedException:当前线程进入等待状态，如果其他线程调用condition的signal或者signalAll方法并且当前线程获取Lock从await方法返回，如果在等待状态中被中断会抛出被中断异常；
 
+2. long awaitNanos(long nanosTimeout)：当前线程进入等待状态直到被通知，中断或者**超时**；
+
+3. boolean await(long time, TimeUnit unit)throws InterruptedException：同第二种，支持自定义时间单位
+
+4. boolean awaitUntil(Date deadline) throws InterruptedException：当前线程进入等待状态直到被通知，中断或者**到了某个时间**
+
+
+
+1. void signal()：唤醒一个等待在condition上的线程，将该线程从**等待队列**中转移到**同步队列**中，如果在同步队列中能够竞争到Lock则可以从等待方法中返回。
+2. void signalAll()：与1的区别在于能够唤醒所有等待在condition上的线程
+
+
+
+## LockSupport工具
+
+
+
+阻塞线程
+
+void park()：阻塞当前线程，如果调用unpark方法或者当前线程被中断，从能从park()方法中返回
+
+void park(Object blocker)：功能同方法1，入参增加一个Object对象，用来记录导致线程阻塞的阻塞对象，方便进行问题排查；
+
+void parkNanos(long nanos)：阻塞当前线程，最长不超过nanos纳秒，增加了超时返回的特性；
+
+void parkNanos(Object blocker, long nanos)：功能同方法3，入参增加一个Object对象，用来记录导致线程阻塞的阻塞对象，方便进行问题排查；
+
+void parkUntil(long deadline)：阻塞当前线程，知道deadline；
+
+void parkUntil(Object blocker, long deadline)：功能同方法5，入参增加一个Object对象，用来记录导致线程阻塞的阻塞对象，方便进行问题排查；
+
+
+
+唤醒线程
+
+void unpark(Thread thread):唤醒处于阻塞状态的指定线程
+
+
+
+其他todo
 
 
 
