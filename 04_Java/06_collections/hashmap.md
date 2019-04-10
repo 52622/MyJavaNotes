@@ -65,3 +65,11 @@ https://blog.csdn.net/Hzt_fighting_up/article/details/78737468
 
 ![img](assets/687474703a2f2f6d792d626c6f672d746f2d7573652e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f31382d382d32322f39373733393232302e6a7067.jpg) 
 
+JDK1.8的优化
+
+https://www.jianshu.com/p/800aa1cf5c13
+
+源码分析，有图，比较清楚
+
+https://www.cnblogs.com/xiaoxi/p/7233201.html
+
