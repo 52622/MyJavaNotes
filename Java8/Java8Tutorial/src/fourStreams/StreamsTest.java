@@ -2,6 +2,8 @@ package fourStreams;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * java.util.Stream 表示能应用在一组元素上一次执行的操作序列
@@ -30,5 +32,22 @@ public class StreamsTest {
     System.out.println("Count");
     long count = list.stream().filter((s) -> s.startsWith("a")).count();
     System.out.println(count);
+    //Reduce 最终操作 允许通过指定的函数来讲stream中的多个元素规约为一个元素，规约后的结果是通过Optional 接口表示
+    System.out.println("Reduce");
+    Optional<String> reduce = list.stream().sorted().reduce((s1, s2) -> s1 + "*" + s2);
+    reduce.ifPresent(System.out::println);
+    // 一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合
+    // 字符串连接，concat = "ABCD"
+    String concat = Stream.of("A", "B", "C", "D").reduce("", String::concat);
+    // 求最小值，minValue = -3.0
+    double minValue = Stream.of(-1.5, 1.0, -3.0, -2.0).reduce(Double.MAX_VALUE, Double::min);
+    // 求和，sumValue = 10, 有起始值
+    int sumValue = Stream.of(1, 2, 3, 4).reduce(0, Integer::sum);
+    // 求和，sumValue = 10, 无起始值，没有起始值的 reduce()，由于可能没有足够的元素，返回的是 Optional
+    sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
+    // 过滤，字符串连接，concat = "ace"
+    concat = Stream.of("a", "B", "c", "D", "e", "F").
+        filter(x -> x.compareTo("Z") > 0).
+        reduce("", String::concat);
   }
 }

@@ -1,22 +1,54 @@
-NoSQL
+<http://www.importnew.com/27477.html>
 
-内存键值数据库
-
-
-
-key只能是字符串
-
-value有5种类型，字符串，列表，集合，散列表，有序集合
-
-
-
-| 数据类型 | 可以存储的值           | 操作                                                         |
-| -------- | ---------------------- | ------------------------------------------------------------ |
-| STRING   | 字符串、整数或者浮点数 | 对整个字符串或者字符串的其中一部分执行操作 对整数和浮点数执行自增或者自减操作 |
-| LIST     | 列表                   | 从两端压入或者弹出元素  对单个或者多个元素 进行修剪，只保留一个范围内的元素 |
-| SET      | 无序集合               | 添加、获取、移除单个元素 检查一个元素是否存在于集合中 计算交集、并集、差集 从集合里面随机获取元素 |
-| HASH     | 包含键值对的无序散列表 | 添加、获取、移除单个键值对 获取所有键值对 检查某个键是否存在 |
-| ZSET     | 有序集合               | 添加、获取、删除元素 根据分值范围或者成员来获取元素 计算一个键的排名 |
-
-
-
+```java
+public class RedisTool {
+ 
+    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_IF_NOT_EXIST = "NX";
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+ 
+    /**
+     * 尝试获取分布式锁
+     * @param jedis Redis客户端
+     * @param lockKey 锁
+     * @param requestId 请求标识
+     * @param expireTime 超期时间
+     * @return 是否获取成功
+     */
+    public static boolean tryGetDistributedLock(Jedis jedis, String lockKey, String requestId, int expireTime) {
+ 
+        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+ 
+        if (LOCK_SUCCESS.equals(result)) {
+            return true;
+        }
+        return false;
+ 
+    }
+ 
+}
+public class RedisTool {
+ 
+    private static final Long RELEASE_SUCCESS = 1L;
+ 
+    /**
+     * 释放分布式锁
+     * @param jedis Redis客户端
+     * @param lockKey 锁
+     * @param requestId 请求标识
+     * @return 是否释放成功
+     */
+    public static boolean releaseDistributedLock(Jedis jedis, String lockKey, String requestId) {
+ 
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));
+ 
+        if (RELEASE_SUCCESS.equals(result)) {
+            return true;
+        }
+        return false;
+ 
+    }
+ 
+}
+```
