@@ -32,8 +32,12 @@ https://github.com/crazyweeds/JVM
 
 
 
-**HashMap1.8中多线程扩容引起的死循环问题**
-<https://blog.csdn.net/Hzt_fighting_up/article/details/78737468
+**HashMap1.8中多线程扩容引起的死循环问题-其实是数据丢失问题**
+https://blog.csdn.net/Hzt_fighting_up/article/details/78737468
+
+https://www.cnblogs.com/wenbochang/p/9425541.html
+
+
 
 
 
